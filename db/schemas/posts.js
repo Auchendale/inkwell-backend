@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const database = require("../index");
+const database = require("../connection");
 
 const postSchema = new mongoose.Schema({
   user: { type: String, required: true },

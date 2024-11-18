@@ -1,7 +1,7 @@
-const testData = require("../db/data/test/index.js");
+const data = require("../db/data/index.js");
 const request = require("supertest");
-const { app } = require("../db/index.js");
+const { app } = require("../db/connection.js");
 
 beforeAll(() => {
-  seed(testData);
+  seed(data);
 });

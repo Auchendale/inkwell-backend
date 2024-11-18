@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const database = require("../index");
+const database = require("../connection");
 
 const letterSchema = new mongoose.Schema({
   sender: { type: String, required: true },
