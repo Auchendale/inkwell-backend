@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
   user_icon_url: { type: String },
   friends: { type: Array, default: [] },
-  country: { type: String, required: true },
   location: {
     country: { type: String },
     lat: { type: Number },
@@ -18,12 +17,13 @@ const User = mongoose.model("User", userSchema);
 
 const postUser = async () => {
   const data = new User({
-    username: "Kev",
+    username: "Kevvvvv",
     email: "kevmorel@mastermusician.com",
     country: "England",
   });
   try {
     await data.save();
+    console.log("user inserted");
   } catch (error) {
     console.log(error);
   }
