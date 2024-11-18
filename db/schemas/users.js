@@ -23,7 +23,6 @@ const postUser = async () => {
   });
   try {
     await data.save();
-    console.log("user inserted");
   } catch (error) {
     console.log(error);
   }

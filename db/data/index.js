@@ -1,7 +1,5 @@
-const userData = require("./users.js");
-const postsData = require("./posts.js");
-const lettersData = require("./letters.js");
+const usersData = require("./users-data.js");
+const postsData = require("./posts-data.js");
+const lettersData = require("./letters-data.js");
 
-const data = { userData, postsData, lettersData };
-
-module.exports = data;
+module.exports = { usersData, postsData, lettersData };

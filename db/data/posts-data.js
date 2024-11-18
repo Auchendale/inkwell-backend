@@ -40,3 +40,5 @@ const posts = [
     post: "This site is the best!",
   },
 ];
+
+module.exports = posts;
