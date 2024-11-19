@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const database = require("../connection");
+const database = require("../db/connection");
 
 const postSchema = new mongoose.Schema({
   user: { type: String, required: true },
@@ -10,19 +10,5 @@ const postSchema = new mongoose.Schema({
 });
 
 const Post = mongoose.model("Post", postSchema);
-
-const postPost = async () => {
-  const data = new Post({
-    user: "Kev",
-    post: "I am THE Kev.",
-  });
-  try {
-    await data.save();
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-postPost();
 
 module.exports = Post;

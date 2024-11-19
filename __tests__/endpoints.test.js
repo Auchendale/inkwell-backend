@@ -12,6 +12,18 @@ afterAll(async () => {
 describe("GET /api/users", () => {
   test("GET 200 - responds with an array of users", async () => {
     const response = await request(app).get("/api/users").expect(200);
-    expect(response.body.users).toHaveLength(11);
+    expect(response.body.users).toHaveLength(10);
+  });
+});
+describe("GET /api/users/:username", () => {
+  test("GET 200 - responds with an object containing a single user's data", async () => {
+    const response = await request(app).get("/api/users/Kev").expect(200);
+    expect(response.body.user.email).toEqual("kev.morel.musician@hotmail.com");
+  });
+  test("GET 404 - responds with an appropriate error message if the username does not exist", async () => {
+    const response = await request(app)
+      .get("/api/users/not-a-user")
+      .expect(404);
+    expect(response.body.msg).toBe("user does not exist");
   });
 });
