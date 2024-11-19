@@ -20,4 +20,10 @@ describe("GET /api/users/:username", () => {
     const response = await request(app).get("/api/users/Kev").expect(200);
     expect(response.body.user.email).toEqual("kev.morel.musician@hotmail.com");
   });
+  test("GET 404 - responds with an appropriate error message if the username does not exist", async () => {
+    const response = await request(app)
+      .get("/api/users/not-a-user")
+      .expect(404);
+    expect(response.body.msg).toBe("user does not exist");
+  });
 });
