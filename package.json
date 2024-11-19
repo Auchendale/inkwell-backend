@@ -1,10 +1,10 @@
 {
   "name": "inkwell-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "connection.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon index.js"
+    "start": "nodemon listen.js"
   },
   "keywords": [],
   "author": "",
