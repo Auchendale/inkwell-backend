@@ -1,7 +1,7 @@
 const Users = require("../schemas/users");
 const Posts = require("../schemas/posts");
 const Letters = require("../schemas/letters.js");
-const  database  = require("../connection.js");
+const database = require("../connection.js");
 
 const seed = async ({ usersData, postsData, lettersData }) => {
   try {

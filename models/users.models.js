@@ -1,10 +1,14 @@
 const Users = require("../db/schemas/users.js");
+const database = require("../db/connection.js");
 
 const fetchUsers = async () => {
-  console.log(Users);
-  const users = await Users.find({}).exec();
-  console.log(users);
-  return users;
+  try {
+    const usersAwait = await Users.find({});
+    console.log(usersAwait);
+    return usersAwait;
+  } catch (error) {
+    return error;
+  }
 };
 
 module.exports = { fetchUsers };
