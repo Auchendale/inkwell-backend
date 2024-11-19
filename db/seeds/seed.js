@@ -3,32 +3,19 @@ const Posts = require("../schemas/posts");
 const Letters = require("../schemas/letters.js");
 const { database } = require("../connection.js");
 
-const seed = ({ usersData, postsData, lettersData }) => {
-  // console.log(postsData, "<< posts");
-  return database
-    .dropCollection("users")
-    .then(() => {
-      database.dropCollection("posts");
-    })
-    .then(() => {
-      database.dropCollection("letters");
-    })
-    .then(() => {
-      Users.insertMany(usersData);
-    })
-    .then(() => {
-      console.log(postsData);
-      Posts.insertMany(postsData);
-    })
-    .then(() => {
-      Letters.insertMany(lettersData);
-    })
-    .then(() => {
-      // database.close();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const seed = async ({ usersData, postsData, lettersData }) => {
+  try {
+    await database.dropCollection("users");
+    await database.dropCollection("posts");
+    await database.dropCollection("letters");
+    await Users.insertMany(usersData);
+    await Posts.insertMany(postsData);
+    await Letters.insertMany(lettersData);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    database.close();
+  }
 };
 
 module.exports = seed;
