@@ -1,4 +1,4 @@
-const Users = require("../db/schemas/users.js");
+const Users = require("../models/users.js");
 
 const getUsers = async (request, response, next) => {
   const users = await Users.find();

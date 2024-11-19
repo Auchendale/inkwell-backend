@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const database = require("../connection");
+const database = require("../db/connection");
 
 const letterSchema = new mongoose.Schema({
   sender: { type: String, required: true },
@@ -12,20 +12,5 @@ const letterSchema = new mongoose.Schema({
 });
 
 const Letter = mongoose.model("Letter", letterSchema);
-
-const postLetter = async () => {
-  const data = new Letter({
-    sender: "Kev",
-    recipient: "Kev",
-    content: {},
-  });
-  try {
-    await data.save();
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-postLetter();
 
 module.exports = Letter;

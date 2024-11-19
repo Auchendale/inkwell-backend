@@ -1,6 +1,6 @@
-const Users = require("../schemas/users");
-const Posts = require("../schemas/posts");
-const Letters = require("../schemas/letters.js");
+const Users = require("../../models/users.js");
+const Posts = require("../../models/posts.js");
+const Letters = require("../../models/letters.js");
 const database = require("../connection.js");
 
 const seed = async ({ usersData, postsData, lettersData }) => {

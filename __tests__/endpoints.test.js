@@ -12,7 +12,7 @@ afterAll(async () => {
 describe("GET /api/users", () => {
   test("GET 200 - responds with an array of users", async () => {
     const response = await request(app).get("/api/users").expect(200);
-    expect(response.body.users).toHaveLength(11);
+    expect(response.body.users).toHaveLength(10);
   });
 });
 describe("GET /api/users/:username", () => {
