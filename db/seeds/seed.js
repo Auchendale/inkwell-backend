@@ -13,8 +13,6 @@ const seed = async ({ usersData, postsData, lettersData }) => {
     await Letters.insertMany(lettersData);
   } catch (error) {
     console.log(error);
-  } finally {
-    database.close();
   }
 };
 

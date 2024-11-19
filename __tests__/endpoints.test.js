@@ -4,21 +4,14 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const database = require("../db/connection.js");
 
-beforeEach(() => {
-  seed(data);
+beforeEach(() => seed(data));
+afterAll(async () => {
+  await database.close();
 });
-// afterAll(() => {
-//   database.close();
-// });
 
 describe("GET /api/users", () => {
-  test("GET 200 - responds with an array of users", () => {
-    return request(app)
-      .get("/api/users")
-      .expect(200)
-      .then((response) => {
-        console.log(response.body);
-        expect(response.body.users).toHaveLength(11);
-      });
+  test("GET 200 - responds with an array of users", async () => {
+    const response = await request(app).get("/api/users").expect(200);
+    expect(response.body.users).toHaveLength(11);
   });
 });
