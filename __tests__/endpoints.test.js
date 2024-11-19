@@ -15,3 +15,9 @@ describe("GET /api/users", () => {
     expect(response.body.users).toHaveLength(11);
   });
 });
+describe("GET /api/users/:username", () => {
+  test("GET 200 - responds with an object containing a single user's data", async () => {
+    const response = await request(app).get("/api/users/Kev").expect(200);
+    expect(response.body.user.email).toEqual("kev.morel.musician@hotmail.com");
+  });
+});
