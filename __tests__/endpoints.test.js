@@ -61,3 +61,46 @@ describe("GET /letters/:letter_id", () => {
     expect(response.body.message).toBe("letter does not exist");
   });
 });
+describe("POST /api/letters", () => {
+  test("POST 201 - adds letter to database and returns sent letter ", async () => {
+    const testLetter = {
+      sender: "kieran",
+      recipient: "Clara",
+      content: {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"}
+    }
+    const response = await request(app).post(`/api/letters`).expect(201).send(testLetter)
+    expect(response.body.letter).toHaveProperty("sender", "kieran")
+    expect(response.body.letter).toHaveProperty("recipient", "Clara")
+    expect(response.body.letter).toHaveProperty("content", {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"})
+  })
+  test("POST 201 - ignores superfluous information sent on object", async () => {
+    const testLetter = {
+      sender: "kieran",
+      recipient: "Clara",
+      content: {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"},
+      ringsAndWibs: false
+    }
+    const response = await request(app).post(`/api/letters`).expect(201).send(testLetter)
+    expect(response.body.letter).toHaveProperty("sender", "kieran")
+    expect(response.body.letter).toHaveProperty("recipient", "Clara")
+    expect(response.body.letter).toHaveProperty("content", {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"})
+    
+  })
+  test("POST 400 - responds with a bad request if sender, recipient, or content are not given", async () => {
+    const testLetter = {
+      recipient: "kieran",
+      content: {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"}
+    }
+    const response = await request(app).post(`/api/letters`).expect(400).send(testLetter)
+    expect(response.body.message).toBe("bad request");
+  })
+  test("POST 404 - responds with a bad request if sender does not exist", async () => {
+    const testLetter = {
+      sender: "daz",
+      recipient: "kieran",
+      content: {letter: "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"}
+    }
+    const response = await request(app).post(`/api/letters`).expect(404).send(testLetter)
+    expect(response.body.message).toBe("sender or recipient are not users");
+  })
+})

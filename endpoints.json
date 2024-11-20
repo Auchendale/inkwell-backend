@@ -52,5 +52,22 @@
         "__v": 0
       }
     }
+  },
+  "POST /api/letters":{
+    "description": "return an object containging the posted letter",
+    "example response": {
+      "letter": {
+        "_id": "673df0d268cbd2040894c65d",
+        "sender": "sam",
+        "recipient": "oscar",
+        "content": {
+          "letter": "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg"
+        },
+        "is_opened": false,
+        "is_saved": false,
+        "date_sent": "2024-11-20T14:23:14.684Z",
+        "__v": 0
+      }
+    }
   }
 }
