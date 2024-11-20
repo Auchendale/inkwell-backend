@@ -4,6 +4,7 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const database = require("../db/connection.js");
 const endpoints = require("../endpoints.json");
+const getLetterId = require("../utils/get-letter-id.js");
 
 beforeEach(() => seed(data));
 afterAll(async () => {
@@ -32,5 +33,31 @@ describe("GET /api", () => {
   test("GET 200 - responds with an object showing all endpoints", async () => {
     const response = await request(app).get("/api").expect(200);
     expect(response.body.endpoints).toEqual(endpoints);
+  });
+});
+describe("ALL /notAnEndpoint", () => {
+  test("GET 404 - responds with not found", async () => {
+    const response = await request(app).get("/api/notURL").expect(404);
+    expect(response.body.message).toBe("not found");
+  });
+});
+describe("GET /letters/:letter_id", () => {
+  test("GET 200 - responds with an image file", async () => {
+    const id = await getLetterId();
+    const response = await request(app).get(`/api/letters/${id}`).expect(200);
+    expect(response.body.letter.content).toEqual({
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    });
+  });
+  test("GET 400 - responds with bad request when given an invalid ID", async () => {
+    const response = await request(app).get(`/api/letters/99999`).expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("GET 404 - responds with letter not found when given an id for a letter that does not exist", async () => {
+    const response = await request(app)
+      .get(`/api/letters/999999999999999999999999`)
+      .expect(404);
+    expect(response.body.message).toBe("letter does not exist");
   });
 });

@@ -2,7 +2,10 @@ const letters = [
   {
     sender: "sam",
     recipient: "oscar",
-    content: {},
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },
   },
   {
     sender: "sam",
