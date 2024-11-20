@@ -3,6 +3,7 @@ const request = require("supertest");
 const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const database = require("../db/connection.js");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => seed(data));
 afterAll(async () => {
@@ -25,5 +26,11 @@ describe("GET /api/users/:username", () => {
       .get("/api/users/not-a-user")
       .expect(404);
     expect(response.body.msg).toBe("user does not exist");
+  });
+});
+describe("GET /api", () => {
+  test("GET 200 - responds with an object showing all endpoints", async () => {
+    const response = await request(app).get("/api").expect(200);
+    expect(response.body.endpoints).toEqual(endpoints);
   });
 });
