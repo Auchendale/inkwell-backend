@@ -3,7 +3,7 @@ const Letter = require("../models/letters.js");
 const User = require("../models/users.js")
 const ObjectId = require("mongoose").Types.ObjectId;
 
-const getLetterByLetterID = async (request, response, next) => {
+exports.getLetterByLetterID = async (request, response, next) => {
   const { letter_id } = request.params;
   if (letter_id.length !== 24) {
     response.status(400).send({ message: "bad request" });
@@ -16,7 +16,7 @@ const getLetterByLetterID = async (request, response, next) => {
   }
 };
 
-const postLetter = async (request, response, next) => {
+exports.postLetter = async (request, response, next) => {
   const { sender, recipient, content } = request.body
   if(!sender || !recipient || !content){
     response.status(400).send({message: "bad request"})
@@ -37,4 +37,19 @@ const postLetter = async (request, response, next) => {
   }
 }
 
-module.exports = { getLetterByLetterID, postLetter };
+exports.getLetterByRecipient = async (request, response, next) => {
+  const { recipient } = request.params
+  try {
+    const recipientExists = await User.findOne({ username: recipient })
+    if(!recipientExists){
+      response.status(404).send({message: "user does not exist"})
+    }
+    const letters = await Letter.find({ recipient })
+    response.status(200).send({ letters })
+
+  }
+  catch (error) {
+    next(error)
+  }
+}
+

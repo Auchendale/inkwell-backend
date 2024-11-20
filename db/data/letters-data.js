@@ -10,28 +10,38 @@ const letters = [
   {
     sender: "sam",
     recipient: "kieran",
-    content: {},
-  },
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },  },
   {
     sender: "oscar",
     recipient: "kev",
-    content: {},
-  },
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },  },
   {
     sender: "kieran",
     recipient: "sam",
-    content: {},
-  },
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },  },
   {
     sender: "kieran",
     recipient: "charlie",
-    content: {},
-  },
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },  },
   {
     sender: "charlie",
     recipient: "upender",
-    content: {},
-  },
+    content: {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    },  },
 ];
 
 module.exports = letters;

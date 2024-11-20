@@ -26,7 +26,7 @@ describe("GET /api/users/:username", () => {
     const response = await request(app)
       .get("/api/users/not-a-user")
       .expect(404);
-    expect(response.body.msg).toBe("user does not exist");
+    expect(response.body.message).toBe("user does not exist");
   });
 });
 describe("GET /api", () => {
@@ -102,5 +102,15 @@ describe("POST /api/letters", () => {
     }
     const response = await request(app).post(`/api/letters`).expect(404).send(testLetter)
     expect(response.body.message).toBe("sender or recipient are not users");
+  })
+})
+describe("GET /api/letters/user/:recipient", () => {
+  test("200 - responds with an array containing letter objects", async () => {
+    const response = await request(app).get(`/api/letters/user/sam`).expect(200)
+    expect(response.body.letters).toHaveLength(1)
+  })
+  test("404 - responds with an appropriate error message if the username does not exist", async () => {
+    const response = await request(app).get(`/api/letters/user/fay`).expect(404)
+    expect(response.body.message).toBe("user does not exist");
   })
 })
