@@ -1,0 +1,39 @@
+{
+  "GET /api": {
+    "description": "serves up a json representation of all the available endpoints of the api"
+  },
+  "GET /api/users": {
+    "description": "returns an array with all users",
+    "example response": [
+      {
+        "_id": "673c75ec72ab525f841cafee",
+        "username": "Kev",
+        "email": "kev.morel.musician@hotmail.com",
+        "friends": ["oscar"],
+        "location": {
+          "country": "England",
+          "lat": 51.50735,
+          "long": -0.12776
+        },
+        "__v": 0
+      }
+    ]
+  },
+  "GET /api/users/:username": {
+    "description": "return a object containing a single user as selected from the provided username",
+    "example response": {
+      "user": {
+        "_id": "673c75ec72ab525f841cafee",
+        "username": "Kev",
+        "email": "kev.morel.musician@hotmail.com",
+        "friends": ["oscar"],
+        "location": {
+          "country": "England",
+          "lat": 51.50735,
+          "long": -0.12776
+        },
+        "__v": 0
+      }
+    }
+  }
+}
