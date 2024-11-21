@@ -1,8 +1,7 @@
-const Letters = require("../models/letters");
+exports.getItemID = async (collection) => {
+  const items = await collection.find()
+  return items[0]._id
+}
 
-const getLetterId = async () => {
-  const letters = await Letters.find();
-  return letters[0]._id;
-};
 
-module.exports = getLetterId;
+
