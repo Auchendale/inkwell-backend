@@ -4,7 +4,9 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const database = require("../db/connection.js");
 const endpoints = require("../endpoints.json");
-const getLetterId = require("../utils/get-letter-id.js");
+const { getItemID } = require("../utils/get-letter-id.js");
+const Letter = require("../models/letters.js");
+const Post = require("../models/posts.js");
 
 beforeEach(() => seed(data));
 afterAll(async () => {
@@ -43,7 +45,7 @@ describe("ALL /notAnEndpoint", () => {
 });
 describe("GET /letters/:letter_id", () => {
   test("GET 200 - responds with an image file", async () => {
-    const id = await getLetterId();
+    const id = await getItemID(Letter);
     const response = await request(app).get(`/api/letters/${id}`).expect(200);
     expect(response.body.letter.content).toEqual({
       letter:
@@ -221,7 +223,7 @@ describe("GET /api/letters", () => {
     });
   });
 });
-describe.only("GET /api/posts", () => {
+describe("GET /api/posts", () => {
   test("GET 200 - responds with an array of all posts", async () => {
     const response = await request(app).get("/api/posts?limit=100").expect(200);
     expect(response.body.posts).toHaveLength(40);
@@ -234,7 +236,7 @@ describe.only("GET /api/posts", () => {
     const response = await request(app).get("/api/posts").expect(200);
     expect(response.body.posts).toHaveLength(20);
   });
-  describe.only("Query for post endpoint", () => {
+  describe("Query for post endpoint", () => {
     test("GET 200 - accepts the query number limit given", async () => {
       const response = await request(app).get("/api/posts?limit=5").expect(200);
       expect(response.body.posts).toHaveLength(5);
@@ -247,3 +249,20 @@ describe.only("GET /api/posts", () => {
     });
   });
 });
+describe("GET /api/posts/:post_id", () => {
+  test("GET 200 - responds with the corresponding post", async () => {
+    const id = await getItemID(Post);
+    const response = await request(app).get(`/api/posts/${id}`).expect(200)
+    expect(response.body.post.post).toEqual("I am the Kev")
+  })
+  test("GET 400 - responds with bad request when given an invalid ID", async () => {
+    const response = await request(app).get(`/api/posts/99999`).expect(400);
+    expect(response.body.message).toBe("bad request");
+  })
+  test("GET 404 - responds with post not found when given an id for a post that does not exist", async () => {
+    const response = await request(app)
+      .get(`/api/posts/999999999999999999999999`)
+      .expect(404)
+    expect(response.body.message).toBe("post does not exist")
+  })
+})
