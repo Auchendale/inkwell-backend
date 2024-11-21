@@ -4,7 +4,7 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const database = require("../db/connection.js");
 const endpoints = require("../endpoints.json");
-const { getItemID } = require("../utils/get-letter-id.js");
+const { getItemID } = require("../utils/get-item-id.js");
 const Letter = require("../models/letters.js");
 const Post = require("../models/posts.js");
 
@@ -119,7 +119,7 @@ describe("POST /api/letters", () => {
       .send(testLetter);
     expect(response.body.message).toBe("bad request");
   });
-  test("POST 404 - responds with a bad request if sender does not exist", async () => {
+  test("POST 404 - responds with a not found if sender does not exist", async () => {
     const testLetter = {
       sender: "daz",
       recipient: "kieran",
@@ -252,17 +252,67 @@ describe("GET /api/posts", () => {
 describe("GET /api/posts/:post_id", () => {
   test("GET 200 - responds with the corresponding post", async () => {
     const id = await getItemID(Post);
-    const response = await request(app).get(`/api/posts/${id}`).expect(200)
-    expect(response.body.post.post).toEqual("I am the Kev")
-  })
+    const response = await request(app).get(`/api/posts/${id}`).expect(200);
+    expect(response.body.post.post).toEqual("I am the Kev");
+  });
   test("GET 400 - responds with bad request when given an invalid ID", async () => {
     const response = await request(app).get(`/api/posts/99999`).expect(400);
     expect(response.body.message).toBe("bad request");
-  })
+  });
   test("GET 404 - responds with post not found when given an id for a post that does not exist", async () => {
     const response = await request(app)
       .get(`/api/posts/999999999999999999999999`)
-      .expect(404)
-    expect(response.body.message).toBe("post does not exist")
-  })
-})
+      .expect(404);
+    expect(response.body.message).toBe("post does not exist");
+  });
+});
+
+describe("POST /api/posts", () => {
+  test("POST 201 - adds post to database and returns sent post", async () => {
+    const newPost = {
+      user: "me",
+      post: "this is a new post",
+    };
+    const response = await request(app)
+      .post("/api/posts")
+      .send(newPost)
+      .expect(201);
+    expect(response.body.post).toHaveProperty("user", "me");
+    expect(response.body.post).toHaveProperty("post", "this is a new post");
+  });
+  test("POST 201 - ignores superfluous information sent on body", async () => {
+    const newPost = {
+      user: "me",
+      post: "this is a new post",
+      additional: "information",
+      ignorable: true,
+    };
+    const response = await request(app)
+      .post("/api/posts")
+      .send(newPost)
+      .expect(201);
+    expect(response.body.post).toHaveProperty("user", "me");
+    expect(response.body.post).toHaveProperty("post", "this is a new post");
+  });
+  test("POST 400 - responds with bad request if missing user or post", async () => {
+    const newPost = {
+      post: "this is a new post",
+    };
+    const response = await request(app)
+      .post("/api/posts")
+      .send(newPost)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("POST 400 - responds with not found if user does not exist", async () => {
+    const newPost = {
+      user: "not-a-user",
+      post: "this is a new post",
+    };
+    const response = await request(app)
+      .post("/api/posts")
+      .send(newPost)
+      .expect(404);
+    expect(response.body.message).toBe("user not found");
+  });
+});

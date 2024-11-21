@@ -1,4 +1,5 @@
 const Post = require("../models/posts.js");
+const User = require("../models/users.js")
 const ObjectId = require("mongoose").Types.ObjectId;
 
 
@@ -35,4 +36,26 @@ exports.getPostByPostID = async(request, response, next) => {
   catch(error){
     next(error)
   }
+}
+
+exports.postPost = async (request, response, next) => {
+  const {user, post} = request.body
+  if (!user || !post) {
+    response.status(400).send({ message: "bad request" });
+  }
+  try{
+    const userExists = await User.findOne({ username: user });
+    if(!userExists){
+      response
+        .status(404)
+        .send({ message: "user not found" })
+    }
+    const postToSave = new Post({user, post})
+    const savedPost = await postToSave.save();
+    response.status(201).send({post: postToSave })
+  } catch (error){
+    next(error)
+  }
+
+
 }
