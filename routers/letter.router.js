@@ -10,8 +10,3 @@ letterRouter
     .get(getAllLetters)
 
 module.exports = letterRouter;
-
-// articlesRouter
-//     .route('/')
-//     .get(getAllArticles)
-//     .post(postArticle)
