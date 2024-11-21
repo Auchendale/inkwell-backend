@@ -1,6 +1,6 @@
 const { mongoose } = require("mongoose");
 const Letter = require("../models/letters.js");
-const User = require("../models/users.js")
+const User = require("../models/users.js");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 exports.getLetterByLetterID = async (request, response, next) => {
@@ -17,39 +17,79 @@ exports.getLetterByLetterID = async (request, response, next) => {
 };
 
 exports.postLetter = async (request, response, next) => {
-  const { sender, recipient, content } = request.body
-  if(!sender || !recipient || !content){
-    response.status(400).send({message: "bad request"})
+  const { sender, recipient, content } = request.body;
+  if (!sender || !recipient || !content) {
+    response.status(400).send({ message: "bad request" });
   }
   try {
-    const senderExists = await User.findOne({ username: sender })
-    const recipientExists = await User.findOne({ username: recipient })
+    const senderExists = await User.findOne({ username: sender });
+    const recipientExists = await User.findOne({ username: recipient });
 
-    if(!senderExists || !recipientExists){
-      response.status(404).send({message: "sender or recipient are not users"})
+    if (!senderExists || !recipientExists) {
+      response
+        .status(404)
+        .send({ message: "sender or recipient are not users" });
     }
-    const letter = new Letter({ sender, recipient, content})
-    const savedLetter = await letter.save()
-    response.status(201).send({ letter })
+    const letter = new Letter({ sender, recipient, content });
+    const savedLetter = await letter.save();
+    response.status(201).send({ letter });
+  } catch (error) {
+    next(error);
   }
-  catch (error) {
-    next(error)
-  }
-}
+};
 
-exports.getLetterByRecipient = async (request, response, next) => {
-  const { recipient } = request.params
+exports.getAllLetters = async (request, response, next) => {
+  const { sender, recipient, sort_by, order, is_opened, is_saved } = request.query;
+  const sortFields = [
+    "sender",
+    "recipient",
+    "date_sent",
+    "is_opened",
+    "is_saved",    
+  ];
+  const orderFields = [
+    "asc", 
+    "desc",
+  ];
+  const boolFields = [
+    "true", 
+    "false"
+  ];
+  if (is_opened && !boolFields.includes(is_opened)) {
+    response.status(400).send({ message: "bad request" });
+  }
+  if (is_saved && !boolFields.includes(is_saved)) {
+    response.status(400).send({ message: "bad request" });
+  }  
+  if (order && !orderFields.includes(order)) {
+    response.status(400).send({ message: "bad request" });
+  }
+  let sortString = `-${sort_by}`;
+  order === "asc" ? (sortString = sort_by) : null;
+  if (sort_by && !sortFields.includes(sort_by)) {
+    response.status(400).send({ message: "bad request" });
+  }
   try {
-    const recipientExists = await User.findOne({ username: recipient })
-    if(!recipientExists){
-      response.status(404).send({message: "user does not exist"})
+    if (sender) {
+      const senderExists = await User.findOne({ username: sender });
+      if (!senderExists) {
+        response.status(404).send({ message: "user not found" });
+      }
     }
-    const letters = await Letter.find({ recipient })
-    response.status(200).send({ letters })
-
+    if (recipient) {
+      const recipientExists = await User.findOne({ username: recipient });
+      if (!recipientExists) {
+        response.status(404).send({ message: "user not found" });
+      }
+    }
+    const letters = await Letter.find({})
+      .where(sender ? { sender } : {})
+      .where(recipient ? { recipient } : {})
+      .where(is_opened ? { is_opened } : {})
+      .where(is_saved ? { is_saved } : {})
+      .sort(sort_by ? `${sortString}` : {});
+    response.status(200).send({ letters });
+  } catch (error) {
+    next(error);
   }
-  catch (error) {
-    next(error)
-  }
-}
-
+};
