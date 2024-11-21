@@ -6,7 +6,6 @@ const database = require("../db/connection.js");
 const endpoints = require("../endpoints.json");
 const getLetterId = require("../utils/get-letter-id.js");
 
-
 beforeEach(() => seed(data));
 afterAll(async () => {
   await database.close();
@@ -172,7 +171,9 @@ describe("GET /api/letters", () => {
       const response = await request(app)
         .get("/api/letters?sort_by=date_sent")
         .expect(200);
-      expect(response.body.letters).toBeSortedBy("date_sent", {descending: true});
+      expect(response.body.letters).toBeSortedBy("date_sent", {
+        descending: true,
+      });
     });
     test("GET 400 - sort_by query responds with bad request of trying to sort by a field that does not exist ", async () => {
       const response = await request(app)
@@ -184,7 +185,9 @@ describe("GET /api/letters", () => {
       const response = await request(app)
         .get("/api/letters?sort_by=date_sent&order=asc")
         .expect(200);
-      expect(response.body.letters).toBeSortedBy("date_sent", {descending: false});
+      expect(response.body.letters).toBeSortedBy("date_sent", {
+        descending: false,
+      });
     });
     test("GET 400 - returns bad request if order does not equal 'asc' or 'desc'", async () => {
       const response = await request(app)
@@ -213,6 +216,32 @@ describe("GET /api/letters", () => {
     test("GET 400 - returns bad request if is_saved does not equal 'true' or 'false'", async () => {
       const response = await request(app)
         .get("/api/letters?is_saved=invalid")
+        .expect(400);
+      expect(response.body.message).toBe("bad request");
+    });
+  });
+});
+describe.only("GET /api/posts", () => {
+  test("GET 200 - responds with an array of all posts", async () => {
+    const response = await request(app).get("/api/posts?limit=100").expect(200);
+    expect(response.body.posts).toHaveLength(40);
+  });
+  test("GET 200 - results are sorted by dates in descending order", async () => {
+    const response = await request(app).get("/api/posts").expect(200);
+    expect(response.body.posts).toBeSortedBy("date", { descending: true });
+  });
+  test("GET 200 - responds with the default limit of 20", async () => {
+    const response = await request(app).get("/api/posts").expect(200);
+    expect(response.body.posts).toHaveLength(20);
+  });
+  describe.only("Query for post endpoint", () => {
+    test("GET 200 - accepts the query number limit given", async () => {
+      const response = await request(app).get("/api/posts?limit=5").expect(200);
+      expect(response.body.posts).toHaveLength(5);
+    });
+    test("GET 400 - returns bad request if limit is not a number", async () => {
+      const response = await request(app)
+        .get("/api/posts?limit=notANumber")
         .expect(400);
       expect(response.body.message).toBe("bad request");
     });
