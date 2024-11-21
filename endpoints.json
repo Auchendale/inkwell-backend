@@ -143,5 +143,11 @@
     "example response": {
       "status": 204
     }
+  },
+  "DELETE /api/posts/:post_id": {
+    "description": "deletes specified post",
+    "example response": {
+      "status": 204
+    }
   }
 }

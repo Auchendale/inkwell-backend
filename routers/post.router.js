@@ -1,4 +1,4 @@
-const { getAllPosts, getPostByPostID, postPost } = require("../controllers/posts.controllers");
+const { getAllPosts, getPostByPostID, postPost, deletePostById } = require("../controllers/posts.controllers");
 const postRouter = require("express").Router();
 
 postRouter
@@ -6,6 +6,10 @@ postRouter
     .get(getAllPosts)
     .post(postPost)
 
-postRouter.get("/:post_id", getPostByPostID)
+postRouter
+.route("/:post_id")
+.get(getPostByPostID)
+.delete(deletePostById)
+
 
 module.exports = postRouter;

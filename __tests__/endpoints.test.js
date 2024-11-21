@@ -332,3 +332,19 @@ describe("DELETE /api/letters/:letter_id", () => {
     expect(response.body.message).toBe("bad request")
   })
 })
+describe("DELETE /api/posts/:post", () => {
+  test("DELETE 204 deletes the specified post", async ()=> {
+    const id = await getItemID(Post)
+    const response = await request(app).delete(`/api/posts/${id}`).expect(204)
+    const allPosts = await Post.find({})
+    expect(allPosts).toHaveLength(39)
+  })
+  test("DELETE 404 returns not found if valid id that doesn't exist is given", async ()=> {
+    const response = await request(app).delete(`/api/posts/999999999999999999999999`).expect(404)
+    expect(response.body.message).toBe("post not found")
+  })
+  test("DELETE 400 returns bad request if invalid id is given", async ()=> {
+    const response = await request(app).delete(`/api/posts/not-an-id`).expect(400)
+    expect(response.body.message).toBe("bad request")
+  })
+})
