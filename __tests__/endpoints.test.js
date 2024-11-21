@@ -316,3 +316,19 @@ describe("POST /api/posts", () => {
     expect(response.body.message).toBe("user not found");
   });
 });
+describe("DELETE /api/letters/:letter_id", () => {
+  test("DELETE 204 deletes the specified letter", async ()=> {
+    const id = await getItemID(Letter)
+    const response = await request(app).delete(`/api/letters/${id}`).expect(204)
+    const allLetters = await Letter.find({})
+    expect(allLetters).toHaveLength(5)
+  })
+  test("DELETE 404 returns not found if valid id that doesn't exist is given", async ()=> {
+    const response = await request(app).delete(`/api/letters/999999999999999999999999`).expect(404)
+    expect(response.body.message).toBe("letter not found")
+  })
+  test("DELETE 400 returns bad request if invalid id is given", async ()=> {
+    const response = await request(app).delete(`/api/letters/not-an-id`).expect(400)
+    expect(response.body.message).toBe("bad request")
+  })
+})

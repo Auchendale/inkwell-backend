@@ -137,5 +137,11 @@
         "date": "2024-11-19T14:23:14.684Z"
       }
     }
+  },
+  "DELETE /api/letters/:letter_id": {
+    "description": "deletes specified letter",
+    "example response": {
+      "status": 204
+    }
   }
 }

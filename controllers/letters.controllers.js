@@ -39,28 +39,23 @@ exports.postLetter = async (request, response, next) => {
 };
 
 exports.getAllLetters = async (request, response, next) => {
-  const { sender, recipient, sort_by, order, is_opened, is_saved } = request.query;
+  const { sender, recipient, sort_by, order, is_opened, is_saved } =
+    request.query;
   const sortFields = [
     "sender",
     "recipient",
     "date_sent",
     "is_opened",
-    "is_saved",    
+    "is_saved",
   ];
-  const orderFields = [
-    "asc", 
-    "desc",
-  ];
-  const boolFields = [
-    "true", 
-    "false"
-  ];
+  const orderFields = ["asc", "desc"];
+  const boolFields = ["true", "false"];
   if (is_opened && !boolFields.includes(is_opened)) {
     response.status(400).send({ message: "bad request" });
   }
   if (is_saved && !boolFields.includes(is_saved)) {
     response.status(400).send({ message: "bad request" });
-  }  
+  }
   if (order && !orderFields.includes(order)) {
     response.status(400).send({ message: "bad request" });
   }
@@ -91,5 +86,24 @@ exports.getAllLetters = async (request, response, next) => {
     response.status(200).send({ letters });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.deleteLetterById = async (request, response, next) => {
+  const { letter_id } = request.params;
+  if (letter_id.length !== 24) {
+    response.status(400).send({ message: "bad request" });}
+    else{
+      const id = new ObjectId(letter_id);
+      try{
+        const letterToDelete = await Letter.findByIdAndDelete(id)
+        if(!letterToDelete){
+          response.status(404).send({message: "letter not found"})
+        }
+        response.status(204).send()
+    }
+    catch (error){
+      next(error)
+    }
   }
 };
