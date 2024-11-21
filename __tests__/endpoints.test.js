@@ -317,34 +317,87 @@ describe("POST /api/posts", () => {
   });
 });
 describe("DELETE /api/letters/:letter_id", () => {
-  test("DELETE 204 deletes the specified letter", async ()=> {
-    const id = await getItemID(Letter)
-    const response = await request(app).delete(`/api/letters/${id}`).expect(204)
-    const allLetters = await Letter.find({})
-    expect(allLetters).toHaveLength(5)
-  })
-  test("DELETE 404 returns not found if valid id that doesn't exist is given", async ()=> {
-    const response = await request(app).delete(`/api/letters/999999999999999999999999`).expect(404)
-    expect(response.body.message).toBe("letter not found")
-  })
-  test("DELETE 400 returns bad request if invalid id is given", async ()=> {
-    const response = await request(app).delete(`/api/letters/not-an-id`).expect(400)
-    expect(response.body.message).toBe("bad request")
-  })
-})
+  test("DELETE 204 deletes the specified letter", async () => {
+    const id = await getItemID(Letter);
+    const response = await request(app)
+      .delete(`/api/letters/${id}`)
+      .expect(204);
+    const allLetters = await Letter.find({});
+    expect(allLetters).toHaveLength(5);
+  });
+  test("DELETE 404 returns not found if valid id that doesn't exist is given", async () => {
+    const response = await request(app)
+      .delete(`/api/letters/999999999999999999999999`)
+      .expect(404);
+    expect(response.body.message).toBe("letter not found");
+  });
+  test("DELETE 400 returns bad request if invalid id is given", async () => {
+    const response = await request(app)
+      .delete(`/api/letters/not-an-id`)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+});
 describe("DELETE /api/posts/:post", () => {
-  test("DELETE 204 deletes the specified post", async ()=> {
+  test("DELETE 204 deletes the specified post", async () => {
+    const id = await getItemID(Post);
+    const response = await request(app).delete(`/api/posts/${id}`).expect(204);
+    const allPosts = await Post.find({});
+    expect(allPosts).toHaveLength(39);
+  });
+  test("DELETE 404 returns not found if valid id that doesn't exist is given", async () => {
+    const response = await request(app)
+      .delete(`/api/posts/999999999999999999999999`)
+      .expect(404);
+    expect(response.body.message).toBe("post not found");
+  });
+  test("DELETE 400 returns bad request if invalid id is given", async () => {
+    const response = await request(app)
+      .delete(`/api/posts/not-an-id`)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+});
+
+describe("PATCH /api/posts/:post_id", () => {
+  test("PATCH 200 increments the like count of a post by the given amount", async ()=> {
+    const patchRequest = {likes: 3}
     const id = await getItemID(Post)
-    const response = await request(app).delete(`/api/posts/${id}`).expect(204)
-    const allPosts = await Post.find({})
-    expect(allPosts).toHaveLength(39)
+    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
+    expect(response.body.post.likes).toBe(3)
   })
-  test("DELETE 404 returns not found if valid id that doesn't exist is given", async ()=> {
-    const response = await request(app).delete(`/api/posts/999999999999999999999999`).expect(404)
-    expect(response.body.message).toBe("post not found")
+  test("PATCH 200 works with negative numbers", async ()=> {
+    const patchRequest = {likes: -1}
+    const id = await getItemID(Post)
+    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
+    expect(response.body.post.likes).toBe(-1)
   })
-  test("DELETE 400 returns bad request if invalid id is given", async ()=> {
-    const response = await request(app).delete(`/api/posts/not-an-id`).expect(400)
+  test("PATCH 200 ignores superfluous information", async ()=> {
+    const patchRequest = {likes: -1, comments: "wow"}
+    const id = await getItemID(Post)
+    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
+    expect(response.body.post.likes).toBe(-1)
+  })
+  test("PATCH 400 returns bad request if likes is not sent on request", async ()=> {
+    const patchRequest = {}
+    const id = await getItemID(Post)
+    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(400)
     expect(response.body.message).toBe("bad request")
+  })
+  test("PATCH 400 returns bad request if likes is not a number", async ()=> {
+    const patchRequest = {likes: "five"}
+    const id = await getItemID(Post)
+    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(400)
+    expect(response.body.message).toBe("bad request")
+  })
+  test("PATCH 400 returns bad request if given an invalid id", async ()=> {
+    const patchRequest = {likes: 1}
+    const response = await request(app).patch(`/api/posts/not-an-id`).send(patchRequest).expect(400)
+    expect(response.body.message).toBe("bad request")
+  })
+  test("PATCH 404 returns not found if given a valid id for a pots that doesn't exist", async ()=> {
+    const patchRequest = {likes: 1}
+    const response = await request(app).patch(`/api/posts/999999999999999999999999`).send(patchRequest).expect(404)
+    expect(response.body.message).toBe("post not found")
   })
 })

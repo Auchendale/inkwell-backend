@@ -1,3 +1,4 @@
+const { request } = require("../app.js");
 const Post = require("../models/posts.js");
 const User = require("../models/users.js");
 const ObjectId = require("mongoose").Types.ObjectId;
@@ -55,18 +56,38 @@ exports.postPost = async (request, response, next) => {
 
 exports.deletePostById = async (request, response, next) => {
   const { post_id } = request.params;
-  if(post_id.length !== 24){
+  if (post_id.length !== 24) {
     response.status(400).send({ message: "bad request" });
   } else {
-  const id = new ObjectId(post_id);
-  try{
-    const postToDelete = await Post.findByIdAndDelete(id)
-    if(!postToDelete){
-      response.status(404).send({message: "post not found"})
+    const id = new ObjectId(post_id);
+    try {
+      const postToDelete = await Post.findByIdAndDelete(id);
+      if (!postToDelete) {
+        response.status(404).send({ message: "post not found" });
+      }
+      response.status(204).send();
+    } catch (error) {
+      next(error);
     }
-      response.status(204).send()
-  } catch (error){
-    next(error)
   }
-}
+};
+
+exports.patchPostById = async (request, response, next) => {
+  const { likes } = request.body;
+  const { post_id } = request.params;
+  let likeString = likes;
+  if (post_id.length !== 24 || !likes || isNaN(Number(likeString))) {
+    response.status(400).send({ message: "bad request" });
+  } else {
+    const id = new ObjectId(post_id);
+    try {
+      const postToPatch = await Post.findById(id);
+      if(!postToPatch){ response.status(404).send({message: "post not found"})}
+      postToPatch.likes += likes;
+      await postToPatch.save();
+      response.status(200).send({ post: postToPatch });
+    } catch (error) {
+      next(error);
+    }
+  }
 };
