@@ -1,11 +1,17 @@
-const { getLetterByLetterID, postLetter, getLetterByRecipient } = require("../controllers/letters.controllers");
+const { getLetterByLetterID, postLetter, getAllLetters } = require("../controllers/letters.controllers");
 
 const letterRouter = require("express").Router();
 
 letterRouter.get("/:letter_id", getLetterByLetterID);
 
-letterRouter.post("/", postLetter)
-
-letterRouter.get("/user/:recipient", getLetterByRecipient)
+letterRouter
+    .route('/')
+    .post(postLetter)
+    .get(getAllLetters)
 
 module.exports = letterRouter;
+
+// articlesRouter
+//     .route('/')
+//     .get(getAllArticles)
+//     .post(postArticle)

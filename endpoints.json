@@ -70,8 +70,20 @@
       }
     }
   },
-  "GET /api/letters/user/:recipient": {
-    "description": "return an array containing the users received letters",
+  "GET /api/letters": {
+    "description": "return all letters and accepts queries ",
+    "queries": [
+      {"sender": "username"}, 
+      {"recipient": "username"}, 
+      {"sort_by": 
+        ["sender",
+        "recipient",
+        "date_sent",
+        "is_opened",
+        "is_saved"]}, 
+      {"order": ["asc", "desc"]},
+      {"is_opened": ["true", "false"]},
+      {"is_saved": ["true", "false"]} ],
     "example response": {
       "letters": [{
         "_id": "673df0d268cbd2040894c65d",
