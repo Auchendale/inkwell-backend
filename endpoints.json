@@ -125,5 +125,17 @@
         "date": "2024-11-19T14:23:14.684Z"
       }
     }
+  },
+  "POST /api/posts": {
+    "description": "posts a new post and returns the posted object",
+    "example response": {
+      "post": {
+        "_id": "673df0d268cbd2040894c65d",
+        "user": "Kev",
+        "post": "I am the Kev",
+        "likes": 0,
+        "date": "2024-11-19T14:23:14.684Z"
+      }
+    }
   }
 }
