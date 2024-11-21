@@ -149,5 +149,18 @@
     "example response": {
       "status": 204
     }
+  },
+  "PATCH /api/posts/:post_id": {
+    "description": "updates the likes on a post document by the given amount",
+    "example request": {"likes": 1},
+    "example response": {
+      "post": {
+        "_id": "673df0d268cbd2040894c65d",
+        "user": "Kev",
+        "post": "I am the Kev",
+        "likes": 1,
+        "date": "2024-11-19T14:23:14.684Z"
+      }
+    }
   }
 }
