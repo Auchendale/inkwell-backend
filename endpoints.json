@@ -37,7 +37,7 @@
     }
   },
   "GET /api/letters/:letter_id": {
-    "description": "return an object containing a letters data from provided letter ID",
+    "description": "return an object containing a letter's data from provided letter ID",
     "example response": {
       "letter": {
         "_id": "673df0d268cbd2040894c65d",
