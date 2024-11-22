@@ -16,7 +16,7 @@ afterAll(async () => {
 describe("GET /api/users", () => {
   test("GET 200 - responds with an array of users", async () => {
     const response = await request(app).get("/api/users").expect(200);
-    expect(response.body.users).toHaveLength(10);
+    expect(response.body.users).toHaveLength(9);
   });
 });
 describe("GET /api/users/:username", () => {
@@ -270,19 +270,19 @@ describe("GET /api/posts/:post_id", () => {
 describe("POST /api/posts", () => {
   test("POST 201 - adds post to database and returns sent post", async () => {
     const newPost = {
-      user: "me",
+      user: "charlie",
       post: "this is a new post",
     };
     const response = await request(app)
       .post("/api/posts")
       .send(newPost)
       .expect(201);
-    expect(response.body.post).toHaveProperty("user", "me");
+    expect(response.body.post).toHaveProperty("user", "charlie");
     expect(response.body.post).toHaveProperty("post", "this is a new post");
   });
   test("POST 201 - ignores superfluous information sent on body", async () => {
     const newPost = {
-      user: "me",
+      user: "charlie",
       post: "this is a new post",
       additional: "information",
       ignorable: true,
@@ -291,7 +291,7 @@ describe("POST /api/posts", () => {
       .post("/api/posts")
       .send(newPost)
       .expect(201);
-    expect(response.body.post).toHaveProperty("user", "me");
+    expect(response.body.post).toHaveProperty("user", "charlie");
     expect(response.body.post).toHaveProperty("post", "this is a new post");
   });
   test("POST 400 - responds with bad request if missing user or post", async () => {
@@ -427,10 +427,10 @@ describe("Patch 200 /api/users/:username", () => {
   test("PATCH 200 - adds a friend to the friend array and returns the updated user object (defaults to adding friend if not specified)", async () => {
     const patchRequest = { friend: "Kev" };
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/users/B.Aldeegull")
       .send(patchRequest)
       .expect(200);
-    expect(response.body.user.friends).toEqual(["Kev"]);
+    expect(response.body.user.friends).toEqual(["charlie", "Kev"]);
   });
   test("PATCH 200 - removes a friend from the friend array and returns the updated user object if requested to remove", async () => {
     const patchRequest = { friend: "kieran", remove: true };
@@ -443,10 +443,10 @@ describe("Patch 200 /api/users/:username", () => {
   test("PATCH 200 - ignores superfluous information on the patch request object", async () => {
     const patchRequest = { friend: "Kev", best: "true" };
     const response = await request(app)
-      .patch("/api/users/me")
+      .patch("/api/users/B.Aldeegull")
       .send(patchRequest)
       .expect(200);
-    expect(response.body.user.friends).toEqual(["Kev"]);
+    expect(response.body.user.friends).toEqual(["charlie", "Kev"]);
   });
   test("PATCH 400 - returns bad request if you try to add a friend already on the list", async () => {
     const patchRequest = { friend: "kieran" };
