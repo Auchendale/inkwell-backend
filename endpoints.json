@@ -152,7 +152,7 @@
   },
   "PATCH /api/posts/:post_id": {
     "description": "updates the likes on a post document by the given amount",
-    "example request": {"likes": 1},
+    "example request": { "likes": 1 },
     "example response": {
       "post": {
         "_id": "673df0d268cbd2040894c65d",
@@ -160,6 +160,24 @@
         "post": "I am the Kev",
         "likes": 1,
         "date": "2024-11-19T14:23:14.684Z"
+      }
+    }
+  },
+  "PATCH /api/users/:username": {
+    "description": "updates the friend array on the user object allowing adding or removing friends",
+    "example request": { "friend": "sam", "remove": true },
+    "example response": {
+      "user": {
+        "_id": "673c75ec72ab525f841cafee",
+        "username": "Kev",
+        "email": "kev.morel.musician@hotmail.com",
+        "friends": ["oscar"],
+        "location": {
+          "country": "England",
+          "lat": 51.50735,
+          "long": -0.12776
+        },
+        "__v": 0
       }
     }
   }

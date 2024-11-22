@@ -360,44 +360,144 @@ describe("DELETE /api/posts/:post", () => {
 });
 
 describe("PATCH /api/posts/:post_id", () => {
-  test("PATCH 200 increments the like count of a post by the given amount", async ()=> {
-    const patchRequest = {likes: 3}
-    const id = await getItemID(Post)
-    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
-    expect(response.body.post.likes).toBe(3)
-  })
-  test("PATCH 200 works with negative numbers", async ()=> {
-    const patchRequest = {likes: -1}
-    const id = await getItemID(Post)
-    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
-    expect(response.body.post.likes).toBe(-1)
-  })
-  test("PATCH 200 ignores superfluous information", async ()=> {
-    const patchRequest = {likes: -1, comments: "wow"}
-    const id = await getItemID(Post)
-    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(200)
-    expect(response.body.post.likes).toBe(-1)
-  })
-  test("PATCH 400 returns bad request if likes is not sent on request", async ()=> {
-    const patchRequest = {}
-    const id = await getItemID(Post)
-    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(400)
-    expect(response.body.message).toBe("bad request")
-  })
-  test("PATCH 400 returns bad request if likes is not a number", async ()=> {
-    const patchRequest = {likes: "five"}
-    const id = await getItemID(Post)
-    const response = await request(app).patch(`/api/posts/${id}`).send(patchRequest).expect(400)
-    expect(response.body.message).toBe("bad request")
-  })
-  test("PATCH 400 returns bad request if given an invalid id", async ()=> {
-    const patchRequest = {likes: 1}
-    const response = await request(app).patch(`/api/posts/not-an-id`).send(patchRequest).expect(400)
-    expect(response.body.message).toBe("bad request")
-  })
-  test("PATCH 404 returns not found if given a valid id for a pots that doesn't exist", async ()=> {
-    const patchRequest = {likes: 1}
-    const response = await request(app).patch(`/api/posts/999999999999999999999999`).send(patchRequest).expect(404)
-    expect(response.body.message).toBe("post not found")
-  })
-})
+  test("PATCH 200 increments the like count of a post by the given amount", async () => {
+    const patchRequest = { likes: 3 };
+    const id = await getItemID(Post);
+    const response = await request(app)
+      .patch(`/api/posts/${id}`)
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.post.likes).toBe(3);
+  });
+  test("PATCH 200 works with negative numbers", async () => {
+    const patchRequest = { likes: -1 };
+    const id = await getItemID(Post);
+    const response = await request(app)
+      .patch(`/api/posts/${id}`)
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.post.likes).toBe(-1);
+  });
+  test("PATCH 200 ignores superfluous information", async () => {
+    const patchRequest = { likes: -1, comments: "wow" };
+    const id = await getItemID(Post);
+    const response = await request(app)
+      .patch(`/api/posts/${id}`)
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.post.likes).toBe(-1);
+  });
+  test("PATCH 400 returns bad request if likes is not sent on request", async () => {
+    const patchRequest = {};
+    const id = await getItemID(Post);
+    const response = await request(app)
+      .patch(`/api/posts/${id}`)
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("PATCH 400 returns bad request if likes is not a number", async () => {
+    const patchRequest = { likes: "five" };
+    const id = await getItemID(Post);
+    const response = await request(app)
+      .patch(`/api/posts/${id}`)
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("PATCH 400 returns bad request if given an invalid id", async () => {
+    const patchRequest = { likes: 1 };
+    const response = await request(app)
+      .patch(`/api/posts/not-an-id`)
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("PATCH 404 returns not found if given a valid id for a pots that doesn't exist", async () => {
+    const patchRequest = { likes: 1 };
+    const response = await request(app)
+      .patch(`/api/posts/999999999999999999999999`)
+      .send(patchRequest)
+      .expect(404);
+    expect(response.body.message).toBe("post not found");
+  });
+});
+
+describe("Patch 200 /api/users/:username", () => {
+  test("PATCH 200 - adds a friend to the friend array and returns the updated user object (defaults to adding friend if not specified)", async () => {
+    const patchRequest = { friend: "Kev" };
+    const response = await request(app)
+      .patch("/api/users/me")
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.user.friends).toEqual(["Kev"]);
+  });
+  test("PATCH 200 - removes a friend from the friend array and returns the updated user object if requested to remove", async () => {
+    const patchRequest = { friend: "kieran", remove: true };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.user.friends).toEqual(["oscar", "LailaStarr"]);
+  });
+  test("PATCH 200 - ignores superfluous information on the patch request object", async () => {
+    const patchRequest = { friend: "Kev", best: "true" };
+    const response = await request(app)
+      .patch("/api/users/me")
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.user.friends).toEqual(["Kev"]);
+  });
+  test("PATCH 400 - returns bad request if you try to add a friend already on the list", async () => {
+    const patchRequest = { friend: "kieran" };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("user is already friend");
+  });
+  test("PATCH 400 - returns bad request if you try to remove a friend who is not on the list", async () => {
+    const patchRequest = { friend: "charlie", remove: true };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("user is not friend");
+  });
+  test("PATCH 404 - returns not found if you try to add or remove a user who does not exist", async () => {
+    const patchRequest = { friend: "not-a-user", remove: true };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(404);
+    expect(response.body.message).toBe("user not found");
+  });
+  test("PATCH 404 - returns not found if you try to add or remove a friend for a user who does not exist", async () => {
+    const patchRequest = { friend: "Kev" };
+    const response = await request(app)
+      .patch("/api/users/not-a-user")
+      .send(patchRequest)
+      .expect(404);
+    expect(response.body.message).toBe("user not found");
+  });
+  test("PATCH 400 - returns bad request if patch request is sent without friend key", async () => {
+    const patchRequest = { remove: true };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+  test("PATCH 400 - returns bad request if user is added as friend", async () => {
+    const patchRequest = { friend: "sam" };
+    const response = await request(app)
+      .patch("/api/users/sam")
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
+});
+
+
+
+
