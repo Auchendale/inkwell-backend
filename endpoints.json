@@ -55,6 +55,11 @@
   },
   "POST /api/letters": {
     "description": "return an object containing the posted letter",
+    "example request": {
+      "sender":"sam",
+      "recipient":"oscar",
+      "content": {"letter": "image.png"} 
+    },
     "example response": {
       "letter": {
         "_id": "673df0d268cbd2040894c65d",
