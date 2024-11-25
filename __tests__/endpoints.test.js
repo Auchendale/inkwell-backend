@@ -266,7 +266,6 @@ describe("GET /api/posts/:post_id", () => {
     expect(response.body.message).toBe("post does not exist");
   });
 });
-
 describe("POST /api/posts", () => {
   test("POST 201 - adds post to database and returns sent post", async () => {
     const newPost = {
@@ -358,7 +357,6 @@ describe("DELETE /api/posts/:post", () => {
     expect(response.body.message).toBe("bad request");
   });
 });
-
 describe("PATCH /api/posts/:post_id", () => {
   test("PATCH 200 increments the like count of a post by the given amount", async () => {
     const patchRequest = { likes: 3 };
@@ -413,7 +411,7 @@ describe("PATCH /api/posts/:post_id", () => {
       .expect(400);
     expect(response.body.message).toBe("bad request");
   });
-  test("PATCH 404 returns not found if given a valid id for a pots that doesn't exist", async () => {
+  test("PATCH 404 returns not found if given a valid id for a post that doesn't exist", async () => {
     const patchRequest = { likes: 1 };
     const response = await request(app)
       .patch(`/api/posts/999999999999999999999999`)
@@ -422,8 +420,7 @@ describe("PATCH /api/posts/:post_id", () => {
     expect(response.body.message).toBe("post not found");
   });
 });
-
-describe("Patch 200 /api/users/:username", () => {
+describe("PATCH /api/users/:username", () => {
   test("PATCH 200 - adds a friend to the friend array and returns the updated user object (defaults to adding friend if not specified)", async () => {
     const patchRequest = { friend: "Kev" };
     const response = await request(app)
@@ -497,6 +494,62 @@ describe("Patch 200 /api/users/:username", () => {
     expect(response.body.message).toBe("bad request");
   });
 });
+describe("PATCH /api/letters/:letter_id", () => {
+  test("PATCH 200 - changes booleans to be read", async () => {
+    const patchRequest = {is_opened: true}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/${id}`)
+      .send(patchRequest)
+      .expect(200)
+    expect(response.body.letter.is_opened).toBe(true)
+  })
+  test("PATCH 200 - ignores superfluous information", async () => {
+    const patchRequest = {is_opened: true, skoo: "da bat"}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/${id}`)
+      .send(patchRequest)
+      .expect(200)
+    expect(response.body.letter.is_opened).toBe(true)
+  })
+  test("PATCH 400 - returns bad request if booleans are not sent", async () => {
+    const patchRequest = {skoo: "da bat"}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/${id}`)
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  })
+  test("PATCH 400 - returns bad request if booleans are not booleans", async () => {
+    const patchRequest = {is_opened: "skoo"}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/${id}`)
+      .send(patchRequest)
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  })
+  test("PATCH 400 - returns bad request if given an invalid id", async () => {
+    const patchRequest = {is_opened: true}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/monkey`)
+      .send(patchRequest)
+      .expect(400)
+      expect(response.body.message).toBe("bad request");
+    })
+  test("PATCH 404 - returns not found if given a valid id for a letter that does not exist", async () => {
+    const patchRequest = {is_opened: true}
+    const id = await getItemID(Letter)
+    const response = await request(app)
+      .patch(`/api/letters/999999999999999999999999`)
+      .send(patchRequest)
+      .expect(404)
+      expect(response.body.message).toBe("letter not found");
+    })
+})
 
 
 

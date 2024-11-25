@@ -4,7 +4,6 @@ const {
   getUserByUsername,
   patchUserByUsername,
 } = require("../controllers/users.controllers");
-const User = require("../models/users");
 
 userRouter.get("/", getUsers);
 
@@ -12,7 +11,5 @@ userRouter
   .route("/:username")
   .get(getUserByUsername)
   .patch(patchUserByUsername);
-
-  
 
 module.exports = userRouter;

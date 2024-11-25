@@ -107,3 +107,26 @@ exports.deleteLetterById = async (request, response, next) => {
     }
   }
 };
+
+exports.patchLetterById = async(request, response, next) => {
+  const { is_opened } = request.body
+  const { letter_id } = request.params;
+  if(!is_opened || typeof is_opened !== "boolean" || letter_id.length !== 24){
+    response.status(400).send({ message: "bad request" });
+  }
+  else{
+    const id = new ObjectId(letter_id);
+    try { 
+      const letterToPatch = await Letter.findById(id);
+      if(!letterToPatch){
+        response.status(404).send({message: "letter not found"})
+      }
+      letterToPatch.is_opened = is_opened
+      await letterToPatch.save()
+      response.status(200).send({letter: letterToPatch})
+    }
+    catch (error){
+      next(error)
+    }
+  }
+}
