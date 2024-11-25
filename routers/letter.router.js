@@ -1,11 +1,12 @@
-const { getLetterByLetterID, postLetter, getAllLetters, deleteLetterById } = require("../controllers/letters.controllers");
+const { getLetterByLetterID, postLetter, getAllLetters, deleteLetterById, patchLetterById } = require("../controllers/letters.controllers");
 
 const letterRouter = require("express").Router();
 
 letterRouter
-.route("/:letter_id")
-.get(getLetterByLetterID)
-.delete(deleteLetterById);
+    .route("/:letter_id")
+    .get(getLetterByLetterID)
+    .delete(deleteLetterById)
+    .patch(patchLetterById)
 
 letterRouter
     .route('/')
