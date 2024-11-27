@@ -557,7 +557,7 @@ describe.only("send email notification", () => {
     const recipient = "Upender";
     const res = await request(app)
       .post("/api/send-mail")
-      .send({ to: "uarukonda@gmail.com", name, recipient })
+      .send({ to: "inkwell.notification.app@gmail.com", name, recipient })
       .expect(200);
     console.log(res.body.message);
   });
