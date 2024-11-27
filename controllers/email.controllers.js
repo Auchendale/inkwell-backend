@@ -6,8 +6,8 @@ const sendNotificationEmail = async (req, res, next) => {
     await sendEmail(
       to,
       "New Letter on InkWell!",
-      `Hi ${recipient}, you have a new letter on InkWell from ${name}.\nOpen the app now to view it!`,
-      `<p>Hi, you have a new email on InkWell!.</p>`
+      `Hi ${recipient}, you have a new letter on InkWell from ${name}.\n\nOpen the app now to view it!`
+      // `<p>Hi, you have a new email on InkWell!.</p>`
     );
 
     res.status(200).send({ message: "Welcome email sent successfully!" });
