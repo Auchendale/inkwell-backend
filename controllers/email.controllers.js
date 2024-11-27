@@ -5,7 +5,7 @@ const sendNotificationEmail = async (req, res, next) => {
   try {
     await sendEmail(
       to,
-      "InkWell notification",
+      "New InkWell Notification",
       "use html to display text",
       `<div style="background-color: lightgrey; padding: 50px; text-align: center; border-radius: 5px;">
       <img src="https://i.imgur.com/UnHICZ7.png" style="width: 50px; height: auto; margin-bottom: 30px;"/>
