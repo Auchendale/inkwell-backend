@@ -19,6 +19,7 @@
     "jest-sorted": "^1.0.15",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
+    "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7"
   },
   "devDependencies": {
