@@ -553,9 +553,11 @@ describe("PATCH /api/letters/:letter_id", () => {
 
 describe.only("send email notification", () => {
   test("POST: 200 with send mail", async () => {
+    const name = "Sam";
+    const recipient = "Upender";
     const res = await request(app)
       .post("/api/send-mail")
-      .send({ to: "uarukonda@gmail.com" })
+      .send({ to: "uarukonda@gmail.com", name, recipient })
       .expect(200);
     console.log(res.body.message);
   });
