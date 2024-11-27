@@ -504,6 +504,15 @@ describe("PATCH /api/letters/:letter_id", () => {
       .expect(200);
     expect(response.body.letter.is_opened).toBe(true);
   });
+  test("PATCH 200 - changes booleans to be unread", async () => {
+    const patchRequest = { is_opened: false };
+    const id = await getItemID(Letter);
+    const response = await request(app)
+      .patch(`/api/letters/${id}`)
+      .send(patchRequest)
+      .expect(200);
+    expect(response.body.letter.is_opened).toBe(false);
+  });
   test("PATCH 200 - ignores superfluous information", async () => {
     const patchRequest = { is_opened: true, skoo: "da bat" };
     const id = await getItemID(Letter);
@@ -551,7 +560,7 @@ describe("PATCH /api/letters/:letter_id", () => {
   });
 });
 
-describe.only("send email notification", () => {
+describe("send email notification", () => {
   test("POST: 200 with send mail", async () => {
     const res = await request(app)
       .post("/api/send-mail")
