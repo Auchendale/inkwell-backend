@@ -496,61 +496,67 @@ describe("PATCH /api/users/:username", () => {
 });
 describe("PATCH /api/letters/:letter_id", () => {
   test("PATCH 200 - changes booleans to be read", async () => {
-    const patchRequest = {is_opened: true}
-    const id = await getItemID(Letter)
+    const patchRequest = { is_opened: true };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/${id}`)
       .send(patchRequest)
-      .expect(200)
-    expect(response.body.letter.is_opened).toBe(true)
-  })
+      .expect(200);
+    expect(response.body.letter.is_opened).toBe(true);
+  });
   test("PATCH 200 - ignores superfluous information", async () => {
-    const patchRequest = {is_opened: true, skoo: "da bat"}
-    const id = await getItemID(Letter)
+    const patchRequest = { is_opened: true, skoo: "da bat" };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/${id}`)
       .send(patchRequest)
-      .expect(200)
-    expect(response.body.letter.is_opened).toBe(true)
-  })
+      .expect(200);
+    expect(response.body.letter.is_opened).toBe(true);
+  });
   test("PATCH 400 - returns bad request if booleans are not sent", async () => {
-    const patchRequest = {skoo: "da bat"}
-    const id = await getItemID(Letter)
+    const patchRequest = { skoo: "da bat" };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/${id}`)
       .send(patchRequest)
       .expect(400);
     expect(response.body.message).toBe("bad request");
-  })
+  });
   test("PATCH 400 - returns bad request if booleans are not booleans", async () => {
-    const patchRequest = {is_opened: "skoo"}
-    const id = await getItemID(Letter)
+    const patchRequest = { is_opened: "skoo" };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/${id}`)
       .send(patchRequest)
       .expect(400);
     expect(response.body.message).toBe("bad request");
-  })
+  });
   test("PATCH 400 - returns bad request if given an invalid id", async () => {
-    const patchRequest = {is_opened: true}
-    const id = await getItemID(Letter)
+    const patchRequest = { is_opened: true };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/monkey`)
       .send(patchRequest)
-      .expect(400)
-      expect(response.body.message).toBe("bad request");
-    })
+      .expect(400);
+    expect(response.body.message).toBe("bad request");
+  });
   test("PATCH 404 - returns not found if given a valid id for a letter that does not exist", async () => {
-    const patchRequest = {is_opened: true}
-    const id = await getItemID(Letter)
+    const patchRequest = { is_opened: true };
+    const id = await getItemID(Letter);
     const response = await request(app)
       .patch(`/api/letters/999999999999999999999999`)
       .send(patchRequest)
-      .expect(404)
-      expect(response.body.message).toBe("letter not found");
-    })
-})
+      .expect(404);
+    expect(response.body.message).toBe("letter not found");
+  });
+});
 
-
-
-
+describe.only("send email notification", () => {
+  test("POST: 200 with send mail", async () => {
+    const res = await request(app)
+      .post("/api/send-mail")
+      .send({ to: "uarukonda@gmail.com" })
+      .expect(200);
+    console.log(res.body.message);
+  });
+});
