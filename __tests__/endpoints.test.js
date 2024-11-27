@@ -566,8 +566,7 @@ describe("send email notification", () => {
     const recipient = "Upender";
     const res = await request(app)
       .post("/api/send-mail")
-      .send({ to: "inkwell.notification.app@gmail.com", name, recipient })
+      .send({ to: "test.inkwell@yahoo.com", name, recipient })
       .expect(200);
-    console.log(res.body.message);
   });
 });
