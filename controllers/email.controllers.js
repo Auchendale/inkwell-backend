@@ -1,13 +1,13 @@
 const sendEmail = require("../utils/mailer");
 
 const sendNotificationEmail = async (req, res, next) => {
-  const { to } = req.body;
+  const { to, name, recipient } = req.body;
   try {
     await sendEmail(
       to,
-      "Welcome to Inkwell!",
-      `Hello, welcome to our app.`,
-      `<p>Hello, welcome to our app.</p>`
+      "New Letter on InkWell!",
+      `Hi ${recipient}, you have a new letter on InkWell from ${name}.\n\nOpen the app now to view it!`
+      // `<p>Hi, you have a new email on InkWell!.</p>`
     );
 
     res.status(200).send({ message: "Welcome email sent successfully!" });

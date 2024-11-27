@@ -3,7 +3,7 @@ const userRouter = require("./user.router");
 const letterRouter = require("./letter.router");
 const postRouter = require("./post.router");
 const endpoints = require("../endpoints.json");
-const emailRouter = require("./emailRouter");
+const emailRouter = require("./email.router");
 
 apiRouter.get("/", (request, response) => {
   response.status(200).send({ endpoints });
