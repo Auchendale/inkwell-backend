@@ -17,7 +17,7 @@ exports.getLetterByLetterID = async (request, response, next) => {
 };
 
 exports.postLetter = async (request, response, next) => {
-  const { sender, recipient, content } = request.body;
+  const { sender, recipient, content, date_sent=Date.now() } = request.body;
   if (!sender || !recipient || !content) {
     response.status(400).send({ message: "bad request" });
   }
@@ -30,7 +30,7 @@ exports.postLetter = async (request, response, next) => {
         .status(404)
         .send({ message: "sender or recipient are not users" });
     }
-    const letter = new Letter({ sender, recipient, content });
+    const letter = new Letter({ sender, recipient, content, date_sent });
     const savedLetter = await letter.save();
     response.status(201).send({ letter });
   } catch (error) {

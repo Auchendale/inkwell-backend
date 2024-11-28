@@ -84,6 +84,27 @@ describe("POST /api/letters", () => {
         "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
     });
   });
+  test("POST 201 - adds letter to database and returns sent letter can set date", async () => {
+    const testLetter = {
+      sender: "kieran",
+      recipient: "Clara",
+      content: {
+        letter:
+          "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+      },
+      date_sent: 5
+    };
+    const response = await request(app)
+      .post(`/api/letters`)
+      .expect(201)
+      .send(testLetter);
+    expect(response.body.letter).toHaveProperty("date_sent", "1970-01-01T00:00:00.005Z");
+    expect(response.body.letter).toHaveProperty("recipient", "Clara");
+    expect(response.body.letter).toHaveProperty("content", {
+      letter:
+        "https://upload.wikimedia.org/wikipedia/commons/a/af/Old_Letter.jpg",
+    });
+  });
   test("POST 201 - ignores superfluous information sent on object", async () => {
     const testLetter = {
       sender: "kieran",
